@@ -1,0 +1,13 @@
+C:\Users\a\Desktop\ServicioRestaurante\obj\Release\net6.0\PubTmp\Out\ServicioRestaurante.exe
+C:\Users\a\Desktop\ServicioRestaurante\obj\Release\net6.0\PubTmp\Out\appsettings.Development.json
+C:\Users\a\Desktop\ServicioRestaurante\obj\Release\net6.0\PubTmp\Out\appsettings.json
+C:\Users\a\Desktop\ServicioRestaurante\obj\Release\net6.0\PubTmp\Out\ServicioRestaurante.dll
+C:\Users\a\Desktop\ServicioRestaurante\obj\Release\net6.0\PubTmp\Out\ServicioRestaurante.deps.json
+C:\Users\a\Desktop\ServicioRestaurante\obj\Release\net6.0\PubTmp\Out\ServicioRestaurante.runtimeconfig.json
+C:\Users\a\Desktop\ServicioRestaurante\obj\Release\net6.0\PubTmp\Out\ServicioRestaurante.pdb
+C:\Users\a\Desktop\ServicioRestaurante\obj\Release\net6.0\PubTmp\Out\System.Data.SqlClient.dll
+C:\Users\a\Desktop\ServicioRestaurante\obj\Release\net6.0\PubTmp\Out\runtimes\win-arm64\native\sni.dll
+C:\Users\a\Desktop\ServicioRestaurante\obj\Release\net6.0\PubTmp\Out\runtimes\win-x64\native\sni.dll
+C:\Users\a\Desktop\ServicioRestaurante\obj\Release\net6.0\PubTmp\Out\runtimes\win-x86\native\sni.dll
+C:\Users\a\Desktop\ServicioRestaurante\obj\Release\net6.0\PubTmp\Out\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
+C:\Users\a\Desktop\ServicioRestaurante\obj\Release\net6.0\PubTmp\Out\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll
