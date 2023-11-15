@@ -8,16 +8,16 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace ServicioRestaurante.Models
 {
-    public class Menu
+    public class Titulo
     {
 
         #region Atributos
         private int codigo;
-        private string titulo;
+        private string nombre;
         private string imagen;
         private double precio;
         private string descripcion;
-        private int tipoMenu;
+        private int categoria;
         #endregion
 
         #region Propiedades
@@ -27,10 +27,10 @@ namespace ServicioRestaurante.Models
             get { return codigo; }
             set { codigo = value; }
         }
-        public string Titulo
+        public string Nombre
         {
-            get { return titulo; }
-            set { titulo = value; }
+            get { return nombre; }
+            set { nombre = value; }
         }
         public string Imagen
         {
@@ -47,41 +47,41 @@ namespace ServicioRestaurante.Models
             get { return descripcion; }
             set { descripcion = value; }
         }
-        public int TipoMenu
+        public int Categoria
         {
-            get { return tipoMenu; }
-            set { tipoMenu = value; }
+            get { return categoria; }
+            set { categoria = value; }
         }
 
 
         #endregion
 
         #region Metodos
-        public static ListaMenu ListarMenu()
+        public static ListaTitulo ListarTitulos()
         {
             Datos.Conectar();
-            string Cadena = $"select * from platillo";
+            string Cadena = $"SELECT * FROM Titulo";
             SqlCommand cmd = new SqlCommand(Cadena, Datos.conx);
             SqlDataReader dr;
             dr = cmd.ExecuteReader();
-            ListaMenu lista = new ListaMenu();
+            ListaTitulo lista = new ListaTitulo();
             try
             {
                 while (dr.HasRows)
                 {
                     if (dr.Read())
                     {
-                        Menu menu = new Menu();
-                        menu.Codigo = int.Parse(dr["codigo"].ToString());
-                        menu.Titulo = dr["Titulo"].ToString() ?? "vacio";
-                        menu.Imagen = dr["imagen"].ToString() ?? "vacio";
-                        menu.Precio = double.Parse(dr["precio"].ToString() ?? "0");
-                        menu.Descripcion = dr["descripcion"].ToString() ?? "vacio";
-                        menu.TipoMenu = int.Parse(dr["tipoMenu"].ToString() ?? "0");
+                        Titulo titulo = new Titulo();
+                        titulo.Codigo = int.Parse(dr["codigo"].ToString());
+                        titulo.Nombre = dr["Nombre"].ToString() ?? "vacio";
+                        titulo.Imagen = dr["imagen"].ToString() ?? "vacio";
+                        titulo.Precio = double.Parse(dr["precio"].ToString() ?? "0");
+                        titulo.Descripcion = dr["descripcion"].ToString() ?? "vacio";
+                        titulo.Categoria = int.Parse(dr["Categoria"].ToString() ?? "0");
 
-                        Console.WriteLine(menu);
+                        Console.WriteLine(titulo);
 
-                        lista.Add(menu);
+                        lista.Add(titulo);
                     }
                     else
                     {
@@ -98,29 +98,29 @@ namespace ServicioRestaurante.Models
             Datos.Desconectar();
             return lista;
         }
-        public static ListaMenu ListarMenu(int TipoMenu)
+        public static ListaTitulo ListarTituloPorCategoria(int Categoria)
         {
             Datos.Conectar();
-            SqlCommand cmd = new SqlCommand("SELECT * FROM platillo WHERE tipoMenu = @TipoMenu", Datos.conx);
-            cmd.Parameters.AddWithValue("@TipoMenu", TipoMenu);
+            SqlCommand cmd = new SqlCommand("SELECT * FROM Titulo WHERE Categoria = @Categoria", Datos.conx);
+            cmd.Parameters.AddWithValue("@Categoria", Categoria);
             SqlDataReader dr;
             dr = cmd.ExecuteReader();
-            ListaMenu lista = new ListaMenu();
+            ListaTitulo lista = new ListaTitulo();
 
             while (dr.HasRows)
             {
                 if (dr.Read())
                 {
-                    Menu menu = new Menu();
-                    menu.Codigo = int.Parse(dr["codigo"].ToString());
-                    menu.Titulo = dr["Titulo"].ToString();
-                    menu.Imagen = dr["imagen"].ToString();
-                    menu.Precio = double.Parse(dr["precio"].ToString());
-                    menu.Descripcion = dr["descripcion"].ToString();
-                    menu.TipoMenu = int.Parse(dr["tipoMenu"].ToString());
+                    Titulo titulo = new Titulo();
+                    titulo.Codigo = int.Parse(dr["codigo"].ToString());
+                    titulo.Nombre = dr["Nombre"].ToString();
+                    titulo.Imagen = dr["imagen"].ToString();
+                    titulo.Precio = double.Parse(dr["precio"].ToString());
+                    titulo.Descripcion = dr["descripcion"].ToString();
+                    titulo.Categoria = int.Parse(dr["categoria"].ToString());
 
 
-                    lista.Add(menu);
+                    lista.Add(titulo);
                 }
                 else
                 {
@@ -131,25 +131,25 @@ namespace ServicioRestaurante.Models
             Datos.Desconectar();
             return lista;
         }
-        public static Menu Orden(int codigo)
+        public static Titulo Orden(int codigo)
         {
             Datos.Conectar();
-            SqlCommand cmd = new SqlCommand("SELECT * FROM platillo WHERE codigo = @codigo", Datos.conx);
+            SqlCommand cmd = new SqlCommand("SELECT * FROM Titulo WHERE codigo = @codigo", Datos.conx);
             cmd.Parameters.AddWithValue("@codigo", codigo);
             SqlDataReader dr;
             dr = cmd.ExecuteReader();
-            ListaMenu lista = new ListaMenu();
+            ListaTitulo lista = new ListaTitulo();
 
-            Menu orden = new Menu();
+            Titulo orden = new Titulo();
             if (dr.Read())
             {
 
                 orden.Codigo = int.Parse(dr["codigo"].ToString());
-                orden.Titulo = dr["Titulo"].ToString() ?? "";
+                orden.Nombre = dr["nombre"].ToString() ?? "";
                 orden.Imagen = dr["imagen"].ToString() ?? "";
                 orden.Precio = double.Parse(dr["precio"].ToString() ?? "0");
                 orden.Descripcion = dr["descripcion"].ToString() ?? "";
-                orden.TipoMenu = int.Parse(dr["tipoMenu"].ToString() ?? "0");
+                orden.Categoria = int.Parse(dr["categoria"].ToString() ?? "0");
 
 
 
@@ -158,18 +158,18 @@ namespace ServicioRestaurante.Models
             Datos.Desconectar();
             return orden;
         }
-        public static bool CrearNuevoAnuncio(Menu entidad,int id,string token)
+        public static bool CrearNuevoAnuncio(Titulo entidad,int id,string token)
         {
             Datos.Conectar();
-            string cadena = "spAddPlatillo @id,@token,@titulo,@imagen,@precio,@descripcion,@tipomenu";
+            string cadena = "spAddTitulo @id,@token,@Nombre,@imagen,@precio,@descripcion,@Categoria";
             SqlCommand cmd = new SqlCommand(cadena, Datos.conx);
             cmd.Parameters.AddWithValue("@id",id);
             cmd.Parameters.AddWithValue("@token",token);
-            cmd.Parameters.AddWithValue("@titulo", entidad.Titulo);
+            cmd.Parameters.AddWithValue("@nombre", entidad.Nombre);
             cmd.Parameters.AddWithValue("@imagen", entidad.Imagen);
             cmd.Parameters.AddWithValue("@precio", entidad.Precio);
             cmd.Parameters.AddWithValue("@descripcion", entidad.Descripcion);
-            cmd.Parameters.AddWithValue("@tipomenu", entidad.TipoMenu);
+            cmd.Parameters.AddWithValue("@Categoria", entidad.Categoria);
 
             try
             {
@@ -188,20 +188,20 @@ namespace ServicioRestaurante.Models
 
 
         }
-        public static bool Actualizar(Menu entidad,int codigo,int id,string token)
+        public static bool Actualizar(Titulo entidad,int codigo,int id,string token)
         {
             Datos.Conectar();
-            string cadena = "spUpdatePlatillo @id,@token,@codigo,@titulo,@imagen,@precio,@descripcion,@tipomenu";
+            string cadena = "spUpdateTitulo @id,@token,@codigo,@nombre,@imagen,@precio,@descripcion,@Categoria";
 
             SqlCommand cmd = new SqlCommand(cadena, Datos.conx);
             cmd.Parameters.AddWithValue("@id", id);
             cmd.Parameters.AddWithValue("@token", token);
             cmd.Parameters.AddWithValue("@codigo", codigo);
-            cmd.Parameters.AddWithValue("@titulo", entidad.Titulo);
+            cmd.Parameters.AddWithValue("@nombre", entidad.Nombre);
             cmd.Parameters.AddWithValue("@imagen", entidad.Imagen);
             cmd.Parameters.AddWithValue("@precio", entidad.Precio);
             cmd.Parameters.AddWithValue("@descripcion", entidad.Descripcion);
-            cmd.Parameters.AddWithValue("@tipomenu", entidad.TipoMenu);
+            cmd.Parameters.AddWithValue("@Categoria", entidad.Categoria);
 
             try
             {
@@ -225,12 +225,12 @@ namespace ServicioRestaurante.Models
 
     }
 
-    public class MenuAdministrador<Type>
+    public class TituloAdministrador<Type>
     {
         #region Atributos   
         private int id;
         private string token;
-        private Type menu;
+        private Type titulo;
         #endregion
 
         #region Propiedades
@@ -244,10 +244,10 @@ namespace ServicioRestaurante.Models
             get { return token; }
             set { token = value; }
         }
-        public Type Menu
+        public Type Titulo
         {
-            get { return menu; }
-            set { menu = value; }
+            get { return titulo; }
+            set { titulo = value; }
         }
         #endregion
 
@@ -257,7 +257,7 @@ namespace ServicioRestaurante.Models
 
 
     }
-    public class ListaMenu : List<Menu>
+    public class ListaTitulo : List<Titulo>
     {
 
     }

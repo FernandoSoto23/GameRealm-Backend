@@ -1,25 +1,29 @@
 
 -- Obtener la fecha y hora actual en tu zona horaria
 
+Create database GameRealDTB
+
 
 ALTER DATABASE [dbo.SekyhRestaurant] SET TIMEZONE = 'Central Standard Time';
 
 SELECT getDate()
 
-
-create table tipoMenu(
+--------------------------
+create table Categoria(
 	Codigo int not null primary key identity(1,1),
 	Nombre varchar(150) not null
 );
 
-create table Platillo(
+
+create table Titulo(
 	Codigo int not null primary key identity(100101,1),
-	titulo varchar(150) not null,
+	Nombre varchar(150) not null,
 	imagen varchar(150),
 	precio numeric(12,2) not null check(precio>0),
 	descripcion varchar(2000),
-	tipoMenu int references tipoMenu(codigo) on delete no action on update no action 
+	Categoria int references Categoria(codigo) on delete no action on update no action 
 );
+
 create table Usuario(
 	id int not null primary key identity(1,1),
 	nombreCompleto varchar(150) not null,
@@ -43,7 +47,7 @@ create table Empleado(
 );
 alter table Usuario add [Admin] char(1) check([Admin] = 's' or [Admin] = 'n')
 
-CREATE TABLE Vitacora(
+CREATE TABLE Bitacora(
 	id int not null primary key identity(1,1),
 	TipoDeAccion int references TipoDeAccion(id),
 	Usuario int not null references usuario(id),
@@ -54,18 +58,19 @@ CREATE TABLE TipoDeAccion(
 	nombre varchar(20) not null,
 );
 
-select * from Platillo
+select * from Titulo
 
 
 --Creando Procedimientos de almacenado
-ALTER PROCEDURE spAddPlatillo(
+
+ALTER PROCEDURE spAddTitulo(
 	@adminID int,
 	@adminToken varchar(64),
-	@titulo varchar(150),
+	@nombre varchar(150),
 	@imagen varchar(150),
 	@precio numeric(12,2),
 	@descripcion varchar(64),
-	@tipoMenu int
+	@Categoria int
 
 )
 as
@@ -73,15 +78,15 @@ begin
 
 	if exists(SELECT * FROM usuario WHERE id= @adminId and token = @adminToken and [Admin] = 's')begin
 
-			INSERT INTO platillo(titulo,imagen,precio,descripcion,tipomenu)
-			VALUES(@titulo,@imagen,@precio,@descripcion,@tipoMenu)
+			INSERT INTO Titulo(Nombre,imagen,precio,descripcion,Categoria)
+			VALUES(@nombre,@imagen,@precio,@descripcion,@Categoria)
 
 			--ASIGNAR ZONA HORARIA CORRECTAMENTE
 			
 			declare @fecha datetime
 			set @fecha = (Select dbo.ConvertirFecha())
 
-			INSERT INTO vitacora(TipoDeAccion,Usuario,fechayhora)
+			INSERT INTO Bitacora(TipoDeAccion,Usuario,fechayhora)
 			VALUES(1,@adminId,@fecha)
 
 			print 'Se guardo todo con madre' 
@@ -89,30 +94,30 @@ begin
 end
 
 select * from usuario 
-select * from vitacora
-select * from platillo where tipomenu = 5
+select * from Bitacora
+select * from Titulo where Categoria = 5
 select * from tipodeaccion
 
-ALTER PROCEDURE spUpdatePlatillo(
+Create PROCEDURE spUpdateTitulo(
 	@adminID int,
 	@adminToken varchar(64),
 	@codigo int,
-	@titulo varchar(150),
+	@Nombre varchar(150),
 	@imagen varchar(150),
 	@precio varchar(150),
 	@descripcion varchar(64),
-	@tipoMenu int
+	@Categoria int
 
 )
 as
 begin	
 	if exists(SELECT * FROM usuario WHERE id=@adminId and token = @adminToken)begin
-			UPDATE platillo 
-			SET titulo = @titulo,
+			UPDATE Titulo 
+			SET Nombre = @Nombre,
 				imagen = @imagen,
 				precio = @precio,
 				descripcion = @descripcion,
-				tipomenu = @tipoMenu
+				Categoria = @Categoria
 			WHERE codigo = @codigo
 
 			--ASIGNAR ZONA HORARIA CORRECTAMENTE
@@ -120,7 +125,7 @@ begin
 			declare @fecha datetime
 			set @fecha = (Select dbo.ConvertirFecha())
 
-			INSERT INTO vitacora(TipoDeAccion,Usuario,fechayhora)
+			INSERT INTO Bitacora(TipoDeAccion,Usuario,fechayhora)
 			VALUES(3,@adminId,@fecha)
 
 			print 'Se guardo todo con madre' 
@@ -128,12 +133,12 @@ begin
 end
 
 
-spAddPlatillo 3,'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3','nuevoproducto','imagen',20,'adss',1
+spAddTitulo 2,'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3','nuevoproducto','imagen',20,'adss',1
 
 
-
-
-
+select * from Titulo
+select * from Bitacora
+spAddUser
 
 CREATE PROCEDURE spAddUser(
 	@nombreCompleto varchar(150),
@@ -155,15 +160,15 @@ spAddUser 'Antonio','Concha','Antonio@gmail.com','1234','66237712123'
 
 
 SELECT * FROM usuario
-SELECT * FROM Platillo
-SELECT * FROM tipoMenu
+SELECT * FROM Titulo
+SELECT * FROM Categoria
 
 --CREANDO TRIGGERS
 
 
 --Creando Funciones
 
-alter FUNCTION ConvertirFecha()
+Create FUNCTION ConvertirFecha()
 returns datetime
 as
 begin
@@ -184,3 +189,5 @@ select dbo.ConvertirFecha()
 			declare @fecha varchar(150)
 			set @fecha = (Select dbo.ConvertirFecha())
 			print @fecha
+
+

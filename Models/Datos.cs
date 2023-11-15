@@ -9,7 +9,7 @@ namespace ServicioRestaurante.Models
 
         public static void Conectar()
         {
-            conx.ConnectionString = "server=localhost;database=SekyhRestaurante;user id = sa;password=1234;";
+            conx.ConnectionString = "server=SKYNEXTG\\SQLEXPRESS;database=gameRealDTB;integrated security = yes;";
             conx.Open();
         }
 
