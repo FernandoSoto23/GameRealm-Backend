@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ServicioRestaurante.Models;
+using GameRealm.Models;
 using System.Diagnostics;
 
-namespace ServicioRestaurante.Controllers
+namespace GameRealm.Controllers
 {
     public class HomeController : Controller
     {

@@ -2,7 +2,7 @@
 using System.Net.Mail;
 using System.Net;
 
-namespace ServicioRestaurante.Models
+namespace GameRealm.Models
 {
     public class Usuario
     {
@@ -15,8 +15,8 @@ namespace ServicioRestaurante.Models
         private string email;
         private string pwd;
         private string telefono;
-        private string token;
-
+        private string token = "";
+        private string codigoVerificacion = "";
 
         #endregion
 
@@ -50,6 +50,12 @@ namespace ServicioRestaurante.Models
         public string Token {
             get { return token; }
             set { token = value; }
+        }
+        public string CodigoVerificacion
+        {
+            get { return codigoVerificacion; }
+            set { codigoVerificacion = value; }
+
         }
         #endregion
 
@@ -98,7 +104,7 @@ namespace ServicioRestaurante.Models
         {
             UsuarioStandard u = new UsuarioStandard();
             Datos.Conectar();
-            SqlCommand cmd = new SqlCommand("select * from usuario where email = @email and pwd = @pwd and [Admin] = 'n'", Datos.conx);
+            SqlCommand cmd = new SqlCommand("select * from usuario where email = @email and pwd = @pwd and [Admin] = 'n' and activo = 's'", Datos.conx);
             cmd.Parameters.AddWithValue("@email", email);
             cmd.Parameters.AddWithValue("@Pwd", pwd);
             SqlDataReader dr;
@@ -126,32 +132,40 @@ namespace ServicioRestaurante.Models
             Datos.Desconectar();
             return u;
         }
-        public static void CrearNuevoUsuario(UsuarioStandard Entidad)
+        public static bool CrearNuevoUsuario(UsuarioStandard Entidad)
         {
+            bool respuesta = false;
             UsuarioStandard u = new UsuarioStandard();
             Datos.Conectar();
-            string query = "spAddUser @nombreCompleto,@nombreUsuario,@email,@pwd,@telefono";
+            string CodigoDeVerificacion = EnviarCorreo(Entidad.Email);
+            string token = Encrypt.GenerarToken();
+            string password = Encrypt.GetSHA256(Entidad.Pwd);
+            string query = "spAddUser @nombreCompleto,@nombreUsuario,@email,@pwd,@telefono,@codigo,@token";
             SqlCommand cmd = new SqlCommand(query, Datos.conx);
             cmd.Parameters.AddWithValue("@nombreCompleto", Entidad.Nombre);
             cmd.Parameters.AddWithValue("@nombreUsuario", Entidad.NombreUsuario);
             cmd.Parameters.AddWithValue("@email", Entidad.Email);
-            cmd.Parameters.AddWithValue("@pwd", Entidad.Pwd);
+            cmd.Parameters.AddWithValue("@pwd", password);
             cmd.Parameters.AddWithValue("@telefono", Entidad.Telefono);
+            cmd.Parameters.AddWithValue("@codigo", CodigoDeVerificacion);
+            cmd.Parameters.AddWithValue("token", token);
 
 
             try
             {
                 cmd.ExecuteNonQuery();
+                respuesta = true;
+                Datos.Desconectar();
+                return respuesta;
             }
             catch (Exception)
             {
                 Datos.Desconectar();
-                throw;
+                return respuesta;
             }
-            Datos.Desconectar();
 
         }
-        public static void EnviarCorreo(string correo)
+        public static string EnviarCorreo(string correo)
         {
             string codigoVerificacion = GenerarCodigoVerificacion(); // Genera el código de verificación
 
@@ -159,13 +173,14 @@ namespace ServicioRestaurante.Models
             string destinatario = correo; // Cambia esto al correo del usuario
 
             EnviarCorreo(remitente, destinatario, "Código de verificación", codigoVerificacion);
+            return codigoVerificacion;
         }
         private static string GenerarCodigoVerificacion()
         {
             string codigo = "";
             Random NumeroAleatorio = new Random();
-            return codigo = NumeroAleatorio.Next(1000,9999).ToString();
-           
+            return codigo = NumeroAleatorio.Next(1000, 9999).ToString();
+
         }
 
         private static void EnviarCorreo(string remitente, string destinatario, string asunto, string mensaje)
@@ -194,6 +209,36 @@ namespace ServicioRestaurante.Models
             {
                 Console.WriteLine("Error al enviar el correo: " + ex.Message);
             }
+        }
+        public static string AuthCodigoDeVerificacion(string usuario,string codigoVerificacion)
+        {
+            Datos.Conectar();
+            string respuesta = "error";
+            string query = "ActivarUsuarioVerificado @usuario,@codigoVerificacion";
+            SqlCommand cmd = new SqlCommand(query,Datos.conx);
+            cmd.Parameters.AddWithValue("@usuario", usuario);
+            cmd.Parameters.AddWithValue("@codigoVerificacion",codigoVerificacion);
+            SqlDataReader dr;
+            try
+            {
+                dr = cmd.ExecuteReader();
+                if (dr.Read())
+                {
+                    if(dr["codigoVerificacion"].ToString() == codigoVerificacion)
+                    {
+                        Datos.Desconectar();
+                        respuesta = "ok";
+                        return respuesta;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                Datos.Desconectar();
+                throw;
+            }
+            Datos.Desconectar();
+            return respuesta;
         }
         #endregion
 

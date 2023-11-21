@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ServicioRestaurante.Models;
+using GameRealm.Models;
 
-namespace ServicioRestaurante.Controllers
+namespace GameRealm.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class LoginController : Controller
+    public class UsuarioController : Controller
     {
+        #region Logueo
         [HttpGet]
         [Route("Loguear")]
         public RespuestaJson<UsuarioStandard> Loguear(string email,string pwd)
@@ -32,7 +33,9 @@ namespace ServicioRestaurante.Controllers
 
 
         }
+        #endregion
 
+        #region Validacion
         [HttpGet]
         [Route("validar")]
         public bool Validar(string token)
@@ -42,12 +45,9 @@ namespace ServicioRestaurante.Controllers
             validacion = Models.Usuario.CheckToken(token);
             return validacion;
         }
+        #endregion
 
-
-
-
-
-
+        #region AdminLogueo
         [HttpGet]
         [Route("admin")]
         public RespuestaJson<Usuario> Admin(string email, string pwd)
@@ -72,7 +72,9 @@ namespace ServicioRestaurante.Controllers
 
 
         }
+        #endregion
 
+        #region Autentificar administrador
         [HttpGet]
         [Route("Auth")]
         public RespuestaJson<Usuario> AutentificaAdministrador(string token)
@@ -96,21 +98,27 @@ namespace ServicioRestaurante.Controllers
 
 
         }
+        #endregion
 
+        #region Codigo de verificacion
         [HttpGet]
         [Route("CorreoDeVerificacion")]
-        public void EnviarCorreoDeVerificacion(string email)
+        public string EnviarCorreoDeVerificacion(string usuario,string codigo)
         {
-            UsuarioStandard.EnviarCorreo(email);
+            return UsuarioStandard.AuthCodigoDeVerificacion(usuario,codigo);
+            
+        }
+        #endregion
+
+        [HttpPost]
+        [Route("CrearUsuario")]
+        public bool CrearUsuario([FromBody] Models.UsuarioStandard Entidad)
+        {
+            bool Respuesta = Models.UsuarioStandard.CrearNuevoUsuario(Entidad);
+            return Respuesta;
         }
     }
 
-        //[HttpPost]
-        //[Route("CrearUsuario")]
-        //public bool CrearUsuario([FromBody] Usuario Entidad)
-        //{
-        //    bool s = false;
-        //    return s;
-        //}
-    
+
+
 }

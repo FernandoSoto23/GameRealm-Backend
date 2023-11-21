@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ServicioRestaurante.Models;
+using GameRealm.Models;
 using System.Text.Json;
 
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace ServicioRestaurante.Controllers
+namespace GameRealm.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

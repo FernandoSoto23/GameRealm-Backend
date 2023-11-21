@@ -45,6 +45,7 @@ create table Empleado(
 	[admin] char(1) check([admin] = 's' or [admin] = 'n'),
 	token char(60) not null unique
 );
+
 alter table Usuario add [Admin] char(1) check([Admin] = 's' or [Admin] = 'n')
 
 CREATE TABLE Bitacora(
@@ -63,7 +64,7 @@ select * from Titulo
 
 --Creando Procedimientos de almacenado
 
-ALTER PROCEDURE spAddTitulo(
+CREATE PROCEDURE spAddTitulo(
 	@adminID int,
 	@adminToken varchar(64),
 	@nombre varchar(150),
@@ -136,30 +137,32 @@ end
 spAddTitulo 2,'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3','nuevoproducto','imagen',20,'adss',1
 
 
-select * from Titulo
-select * from Bitacora
-spAddUser
-
-CREATE PROCEDURE spAddUser(
+alter PROCEDURE spAddUser(
 	@nombreCompleto varchar(150),
 	@NombreUsuario varchar(150),
 	@email varchar(150),
 	@pwd varchar(64),
-	@telefono varchar(20)
+	@telefono varchar(20),
+	@codigo char(4),
+	@token char(64)
 )
 as
 begin
 	
-	INSERT INTO Usuario(nombreCompleto,nombreUsuario,email,pwd,telefono,activo,[Admin])
-	VALUES(@nombreCompleto,@NombreUsuario,@email,@pwd,@telefono,'s','n')
+	INSERT INTO Usuario(nombreCompleto,nombreUsuario,email,pwd,telefono,activo,[Admin],codigoVerificacion,token)
+	VALUES(@nombreCompleto,@NombreUsuario,@email,@pwd,@telefono,'n','n',@codigo,@token)
 	
 end
 
-spAddUser 'Antonio','Concha','Antonio@gmail.com','1234','66237712123'
+spAddUser 'Antonio','si','Antonioa@gmail.com','123','66237712123','1234','0123'
 
+SELECT * FROM Usuario
 
+ALTER TABLE usuario
+ADD codigoVerificacion CHAR(4);
+SELECT * FROM usuario WHERE codigoVerificacion = 1234
 
-SELECT * FROM usuario
+SELECT * FROM usuario WHERE codigoVerificacion = '12'
 SELECT * FROM Titulo
 SELECT * FROM Categoria
 
@@ -191,3 +194,4 @@ select dbo.ConvertirFecha()
 			print @fecha
 
 
+			se

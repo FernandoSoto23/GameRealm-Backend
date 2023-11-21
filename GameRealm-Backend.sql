@@ -1,4 +1,5 @@
 
+use GameRealdtb
 
 select * from Categoria
 

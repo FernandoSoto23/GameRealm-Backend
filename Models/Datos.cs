@@ -1,7 +1,7 @@
 ﻿using System.Data.SqlClient;
 
 
-namespace ServicioRestaurante.Models
+namespace GameRealm.Models
 {
     public class Datos
     {
@@ -9,7 +9,7 @@ namespace ServicioRestaurante.Models
 
         public static void Conectar()
         {
-            conx.ConnectionString = "server=SKYNEXTG\\SQLEXPRESS;database=gameRealDTB;integrated security = yes;";
+            conx.ConnectionString = "server=localhost;database=gameRealDTB;integrated security = yes;";
             conx.Open();
         }
 

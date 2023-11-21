@@ -6,7 +6,7 @@ using System.Text;
 using System.Web;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace ServicioRestaurante.Models
+namespace GameRealm.Models
 {
     public class Titulo
     {

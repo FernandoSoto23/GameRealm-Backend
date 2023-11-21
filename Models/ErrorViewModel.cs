@@ -1,4 +1,4 @@
-namespace ServicioRestaurante.Models
+namespace GameRealm.Models
 {
     public class ErrorViewModel
     {
