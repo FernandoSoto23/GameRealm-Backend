@@ -195,3 +195,33 @@ select dbo.ConvertirFecha()
 
 
 			se
+
+
+			SELECT * FROM usuario
+-- Nuevas consultas a agregar para la db
+
+ALTER PROCEDURE ActivarUsuarioVerificado(
+	@usuario varchar(200),
+	@codigo varchar(200)
+)
+as
+begin
+	if exists((SELECT * FROM usuario WHERE nombreUsuario = @usuario and codigoVerificacion = @codigo))begin
+		UPDATE Usuario SET activo = 's' WHERE NombreUsuario = @usuario
+		SELECT * FROM Usuario WHERE NombreUsuario = @usuario
+	end
+
+end
+
+ActivarUsuarioVerificado si , 1234
+
+
+select * from Usuario
+
+UPDATE Usuario Set activo = 'n' WHERE id  = 4
+
+DELETE FROM Usuario WHERE id =30
+
+
+
+
