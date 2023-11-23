@@ -17,6 +17,8 @@ namespace GameRealm.Models
         private string telefono;
         private string token = "";
         private string codigoVerificacion = "";
+        private string fechaDeNacimiento;
+        private string pais;
 
         #endregion
 
@@ -57,17 +59,29 @@ namespace GameRealm.Models
             set { codigoVerificacion = value; }
 
         }
+        public string FechaDeNacimiento
+        {
+            get { return fechaDeNacimiento; }
+            set { fechaDeNacimiento = value; }
+
+        }
+        public string Pais
+        {
+            get { return pais; }
+            set { pais = value; }
+
+        }
         #endregion
 
         #region Metodos de la clase
-       
+
         public static bool CheckToken(string token)
         {
             bool verificar = false;
             Datos.Conectar();
             Usuario usuario = new Usuario();
             SqlDataReader dr;
-            SqlCommand cmd = new SqlCommand("select * from usuario where token = @token", Datos.conx);
+            SqlCommand cmd = new SqlCommand("SELECT * FROM usuario WHERE token = @token", Datos.conx);
             cmd.Parameters.AddWithValue("@token", token);
             dr = cmd.ExecuteReader();
 
@@ -100,6 +114,41 @@ namespace GameRealm.Models
         #endregion
 
         #region Metodos de la Clase
+
+        public static UsuarioStandard ObtenerUsuarioPorId(int id)
+        {
+            UsuarioStandard u = new UsuarioStandard();
+            Datos.Conectar();
+            SqlCommand cmd = new SqlCommand("SELECT * FROM Usuario WHERE id = @id", Datos.conx);
+            cmd.Parameters.AddWithValue("@id", id);
+            SqlDataReader dr;
+            try
+            {
+                dr = cmd.ExecuteReader();
+                if (dr.Read())
+                {
+
+                    u.Id = int.Parse(dr["id"].ToString());
+                    u.Nombre = dr["nombreCompleto"].ToString();
+                    u.NombreUsuario = dr["nombreUsuario"].ToString();
+                    u.Email = dr["email"].ToString();
+                    u.Telefono = dr["telefono"].ToString();
+                    u.Activo = dr["activo"].ToString() == "s";
+                    u.Token = dr["token"].ToString();
+                    u.FechaDeNacimiento = dr["fecha"].ToString();
+                    u.Pais = dr["pais"].ToString();
+                    
+                }
+            }
+            catch (Exception)
+            {
+                Datos.Desconectar();
+                throw;
+            }
+            Datos.Desconectar();
+            return u;
+        }
+
         public static UsuarioStandard Loguear(string email, string pwd)
         {
             UsuarioStandard u = new UsuarioStandard();
@@ -122,6 +171,8 @@ namespace GameRealm.Models
                     u.Telefono = dr["telefono"].ToString();
                     u.Activo = dr["activo"].ToString() == "s";
                     u.Token = dr["token"].ToString();
+                    u.FechaDeNacimiento = dr["fecha"].ToString();
+                    u.Pais = dr["pais"].ToString();
                 }
             }
             catch (Exception)

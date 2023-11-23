@@ -23,7 +23,13 @@ create table Titulo(
 	descripcion varchar(2000),
 	Categoria int references Categoria(codigo) on delete no action on update no action 
 );
+alter table Titulo add plataforma text
+alter table Titulo add Region varchar(6)
+alter table Titulo add Idioma text
+alter table Titulo add Link Text
 
+select * from Titulo
+select * from Region
 create table Usuario(
 	id int not null primary key identity(1,1),
 	nombreCompleto varchar(150) not null,
@@ -34,7 +40,16 @@ create table Usuario(
 	activo char(1) check(activo = 's' or activo = 'n'),
 	token varchar(64) unique 
 );	
+alter table Usuario add [Admin] char(1) check([Admin] = 's' or [Admin] = 'n')
+alter table Usuario add Tarjetas text
+alter table Usuario add fecha date
+alter table Usuario add pais char(6) references region(clave)
 
+
+select * from Region
+select * from Usuario
+
+select * from Titulo
 
 create table Empleado(
 	id int not null primary key,
@@ -46,7 +61,9 @@ create table Empleado(
 	token char(60) not null unique
 );
 
-alter table Usuario add [Admin] char(1) check([Admin] = 's' or [Admin] = 'n')
+
+
+select * from Usuario
 
 CREATE TABLE Bitacora(
 	id int not null primary key identity(1,1),
@@ -59,9 +76,21 @@ CREATE TABLE TipoDeAccion(
 	nombre varchar(20) not null,
 );
 
-select * from Titulo
+CREATE TABLE Biblioteca(
+	id int not null primary key identity(1,1),
+	idUsuario int references Usuario(id),
+	CodigoTitulo int references Titulo(codigo),
+	TituloKey varchar(64) not null
 
+);
+CREATE TABLE Region(
+    Clave CHAR(6) PRIMARY KEY,
+    RegionNombre VARCHAR(255) NOT NULL
+)
 
+SELECT * FROM Titulo
+SELECT * FROM Usuario
+select * from Biblioteca
 --Creando Procedimientos de almacenado
 
 CREATE PROCEDURE spAddTitulo(
@@ -98,7 +127,7 @@ select * from usuario
 select * from Bitacora
 select * from Titulo where Categoria = 5
 select * from tipodeaccion
-
+select * from Region
 Create PROCEDURE spUpdateTitulo(
 	@adminID int,
 	@adminToken varchar(64),
@@ -222,6 +251,23 @@ UPDATE Usuario Set activo = 'n' WHERE id  = 4
 
 DELETE FROM Usuario WHERE id =30
 
+
+
+--INSERTS
+-- Insertar países en la tabla de regiones
+INSERT INTO Region (Clave, RegionNombre) VALUES ('USA', 'Estados Unidos');
+INSERT INTO Region (Clave, RegionNombre) VALUES ('CAN', 'Canadá');
+INSERT INTO Region (Clave, RegionNombre) VALUES ('MEX', 'México');
+INSERT INTO Region (Clave, RegionNombre) VALUES ('GBR', 'Reino Unido');
+INSERT INTO Region (Clave, RegionNombre) VALUES ('FRA', 'Francia');
+INSERT INTO Region (Clave, RegionNombre) VALUES ('GER', 'Alemania');
+INSERT INTO Region (Clave, RegionNombre) VALUES ('JPN', 'Japón');
+-- Puedes agregar más países según tus necesidades
+
+INSERT INTO Region (Clave, RegionNombre) VALUES
+('Global', 'Global');
+
+SELECT * FROM Region
 
 
 

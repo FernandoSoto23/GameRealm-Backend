@@ -8,6 +8,34 @@ namespace GameRealm.Controllers
     [ApiController]
     public class UsuarioController : Controller
     {
+        #region Obtener Usuario Por ID
+
+        [HttpGet]
+        [Route("ObtenerUsuario")]
+        public RespuestaJson<UsuarioStandard> ObtenerUsuario(int id)
+        {
+            
+            var usuario = UsuarioStandard.ObtenerUsuarioPorId(id);
+            var JSON = new RespuestaJson<UsuarioStandard>();
+            if (usuario.Token != null)
+            {
+
+                JSON.Status = true;
+                JSON.Msg = "ok";
+                JSON.Dato = usuario;
+            }
+            else
+            {
+                JSON.Status = false;
+                JSON.Msg = "error";
+            }
+
+            return JSON;
+
+
+        }
+        #endregion
+
         #region Logueo
         [HttpGet]
         [Route("Loguear")]
@@ -110,6 +138,7 @@ namespace GameRealm.Controllers
         }
         #endregion
 
+        #region Crear Usuario
         [HttpPost]
         [Route("CrearUsuario")]
         public bool CrearUsuario([FromBody] Models.UsuarioStandard Entidad)
@@ -117,6 +146,9 @@ namespace GameRealm.Controllers
             bool Respuesta = Models.UsuarioStandard.CrearNuevoUsuario(Entidad);
             return Respuesta;
         }
+        #endregion
+
+
     }
 
 
