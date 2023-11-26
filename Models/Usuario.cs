@@ -191,7 +191,7 @@ namespace GameRealm.Models
             string CodigoDeVerificacion = EnviarCorreo(Entidad.Email);
             string token = Encrypt.GenerarToken();
             string password = Encrypt.GetSHA256(Entidad.Pwd);
-            string query = "spAddUser @nombreCompleto,@nombreUsuario,@email,@pwd,@telefono,@codigo,@token";
+            string query = "spAddUser @nombreCompleto,@nombreUsuario,@email,@pwd,@telefono,@codigo,@token,@fechaDeNacimiento,@pais";
             SqlCommand cmd = new SqlCommand(query, Datos.conx);
             cmd.Parameters.AddWithValue("@nombreCompleto", Entidad.Nombre);
             cmd.Parameters.AddWithValue("@nombreUsuario", Entidad.NombreUsuario);
@@ -199,7 +199,9 @@ namespace GameRealm.Models
             cmd.Parameters.AddWithValue("@pwd", password);
             cmd.Parameters.AddWithValue("@telefono", Entidad.Telefono);
             cmd.Parameters.AddWithValue("@codigo", CodigoDeVerificacion);
-            cmd.Parameters.AddWithValue("token", token);
+            cmd.Parameters.AddWithValue("@token", token);
+            cmd.Parameters.AddWithValue("@fechaDeNacimiento", Entidad.FechaDeNacimiento);
+            cmd.Parameters.AddWithValue("@pais", Entidad.Pais);
 
 
             try

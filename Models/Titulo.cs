@@ -17,7 +17,13 @@ namespace GameRealm.Models
         private string imagen;
         private double precio;
         private string descripcion;
-        private int categoria;
+        private string categoria;
+        private string plataforma;
+        private string region;
+        private string idioma;
+        private string link;
+
+
         #endregion
 
         #region Propiedades
@@ -47,13 +53,31 @@ namespace GameRealm.Models
             get { return descripcion; }
             set { descripcion = value; }
         }
-        public int Categoria
+        public string Categoria
         {
             get { return categoria; }
             set { categoria = value; }
         }
-
-
+        public string Plataforma
+        {
+            get { return plataforma; }
+            set { plataforma = value; }
+        }
+        public string Region
+        {
+            get { return region; }
+            set { region = value; }
+        }
+        public string Idioma
+        {
+            get { return idioma; }
+            set { idioma = value; }
+        }
+        public string Link
+        {
+            get { return link; }
+            set { link = value; }
+        }
         #endregion
 
         #region Metodos
@@ -77,7 +101,11 @@ namespace GameRealm.Models
                         titulo.Imagen = dr["imagen"].ToString() ?? "vacio";
                         titulo.Precio = double.Parse(dr["precio"].ToString() ?? "0");
                         titulo.Descripcion = dr["descripcion"].ToString() ?? "vacio";
-                        titulo.Categoria = int.Parse(dr["Categoria"].ToString() ?? "0");
+                        titulo.Categoria = dr["Categoria"].ToString() ?? "";
+                        titulo.Plataforma = dr["Plataforma"].ToString() ?? "";
+                        titulo.region = dr["Region"].ToString() ?? "";
+                        titulo.idioma = dr["Idioma"].ToString() ?? "";
+                        titulo.link =  dr["Link"].ToString() ?? "";
 
                         Console.WriteLine(titulo);
 
@@ -117,7 +145,11 @@ namespace GameRealm.Models
                     titulo.Imagen = dr["imagen"].ToString();
                     titulo.Precio = double.Parse(dr["precio"].ToString());
                     titulo.Descripcion = dr["descripcion"].ToString();
-                    titulo.Categoria = int.Parse(dr["categoria"].ToString());
+                    titulo.Categoria = dr["Categoria"].ToString() ?? "";
+                    titulo.Plataforma = dr["Plataforma"].ToString() ?? "";
+                    titulo.region = dr["Region"].ToString() ?? "";
+                    titulo.idioma = dr["Idioma"].ToString() ?? "";
+                    titulo.link = dr["Link"].ToString() ?? "";
 
 
                     lista.Add(titulo);
@@ -131,7 +163,7 @@ namespace GameRealm.Models
             Datos.Desconectar();
             return lista;
         }
-        public static Titulo Orden(int codigo)
+        public static Titulo Producto(int codigo)
         {
             Datos.Conectar();
             SqlCommand cmd = new SqlCommand("SELECT * FROM Titulo WHERE codigo = @codigo", Datos.conx);
@@ -140,23 +172,26 @@ namespace GameRealm.Models
             dr = cmd.ExecuteReader();
             ListaTitulo lista = new ListaTitulo();
 
-            Titulo orden = new Titulo();
+            Titulo titulo = new Titulo();
             if (dr.Read())
             {
 
-                orden.Codigo = int.Parse(dr["codigo"].ToString());
-                orden.Nombre = dr["nombre"].ToString() ?? "";
-                orden.Imagen = dr["imagen"].ToString() ?? "";
-                orden.Precio = double.Parse(dr["precio"].ToString() ?? "0");
-                orden.Descripcion = dr["descripcion"].ToString() ?? "";
-                orden.Categoria = int.Parse(dr["categoria"].ToString() ?? "0");
-
+                titulo.Codigo = int.Parse(dr["codigo"].ToString());
+                titulo.Nombre = dr["nombre"].ToString() ?? "";
+                titulo.Imagen = dr["imagen"].ToString() ?? "";
+                titulo.Precio = double.Parse(dr["precio"].ToString() ?? "0");
+                titulo.Descripcion = dr["descripcion"].ToString() ?? "";
+                titulo.Categoria = dr["categoria"].ToString() ?? "0";
+                titulo.Plataforma = dr["Plataforma"].ToString() ?? "";
+                titulo.region = dr["Region"].ToString() ?? "";
+                titulo.idioma = dr["Idioma"].ToString() ?? "";
+                titulo.link = dr["Link"].ToString() ?? "";
 
 
             }
 
             Datos.Desconectar();
-            return orden;
+            return titulo;
         }
         public static bool CrearNuevoAnuncio(Titulo entidad,int id,string token)
         {

@@ -49,7 +49,7 @@ alter table Usuario add pais char(6) references region(clave)
 select * from Region
 select * from Usuario
 
-select * from Titulo
+select * from Titulo WHERE codigo = '100109'
 
 create table Empleado(
 	id int not null primary key,
@@ -63,7 +63,7 @@ create table Empleado(
 
 
 
-select * from Usuario
+select * from Biblioteca
 
 CREATE TABLE Bitacora(
 	id int not null primary key identity(1,1),
@@ -128,6 +128,7 @@ select * from Bitacora
 select * from Titulo where Categoria = 5
 select * from tipodeaccion
 select * from Region
+
 Create PROCEDURE spUpdateTitulo(
 	@adminID int,
 	@adminToken varchar(64),
@@ -173,21 +174,25 @@ alter PROCEDURE spAddUser(
 	@pwd varchar(64),
 	@telefono varchar(20),
 	@codigo char(4),
-	@token char(64)
+	@token char(64),
+	@fechaDeNacimiento varchar(20),
+	@pais varchar(6)
 )
 as
 begin
-	
-	INSERT INTO Usuario(nombreCompleto,nombreUsuario,email,pwd,telefono,activo,[Admin],codigoVerificacion,token)
-	VALUES(@nombreCompleto,@NombreUsuario,@email,@pwd,@telefono,'n','n',@codigo,@token)
+	DECLARE @fecha2 date
+	set @fecha2 = CONVERT(DATETIME, @fechaDeNacimiento, 120)
+	INSERT INTO Usuario(nombreCompleto,nombreUsuario,email,pwd,telefono,activo,[Admin],codigoVerificacion,token,fecha,pais)
+	VALUES(@nombreCompleto,@NombreUsuario,@email,@pwd,@telefono,'n','n',@codigo,@token,@fecha2,@pais)
 	
 end
 
-spAddUser 'Antonio','si','Antonioa@gmail.com','123','66237712123','1234','0123'
+spAddUser 'Antonio','sie','123','123','66237712123','1234','01234','23-12-2000','MEX'
 
+DELETE FROM Usuario WHERE id =57
+select * from usuario
 SELECT * FROM Usuario
 
-ALTER TABLE usuario
 ADD codigoVerificacion CHAR(4);
 SELECT * FROM usuario WHERE codigoVerificacion = 1234
 
@@ -195,6 +200,10 @@ SELECT * FROM usuario WHERE codigoVerificacion = '12'
 SELECT * FROM Titulo
 SELECT * FROM Categoria
 
+select * from Region
+
+
+select * from Region
 --CREANDO TRIGGERS
 
 
@@ -249,7 +258,10 @@ select * from Usuario
 
 UPDATE Usuario Set activo = 'n' WHERE id  = 4
 
-DELETE FROM Usuario WHERE id =30
+DELETE FROM Usuario WHERE id =36
+
+
+
 
 
 

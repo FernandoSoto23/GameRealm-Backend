@@ -12,13 +12,19 @@ namespace GameRealm.Controllers
     [ApiController]
     public class TituloController : ControllerBase
     {
-
+        
         [HttpGet]
-        public ListaTitulo GetMenus()
+        [Route("ListarTitulos")]
+        public RespuestaJson<ListaTitulo>GetMenus()
         {
+            var JSON = new RespuestaJson<ListaTitulo>();
             ListaTitulo lista = new ListaTitulo();
             lista = Titulo.ListarTitulos();
-            return lista;
+            JSON.Status = true;
+            JSON.Msg = "ok";
+            JSON.Dato = lista;
+
+            return JSON;
         }
 
         [HttpGet]
@@ -31,12 +37,12 @@ namespace GameRealm.Controllers
         }
 
         [HttpGet]
-        [Route("Titulo")]
-        public Titulo Orden(int codigo)
+        [Route("ObtenerTitulo")]
+        public Titulo ObtenerTitulo(int codigo)
         {
-            Titulo orden = new Titulo();
-            orden = Titulo.Orden(codigo);
-            return orden;
+            Titulo titulo = new Titulo();
+            titulo = Titulo.Producto(codigo);
+            return titulo;
         }
 
         [HttpPost]
